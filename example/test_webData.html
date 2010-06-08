@@ -17,11 +17,11 @@
 <tr><td>
 <input type="text" name="website" value="" /></td><td>
 <input id="57ivCMhw9" type="text" name="passwd" value=""></td><td>
-<input type="button" value=" Clear " onclick="document.form.key.value = ''; document.form.passwd.value='';" />
-<input type="submit" name="Save" value="Save" onclick="encryptFormText(Save);" /></td><td>
+<input type="button" value=" Clear " onClick="clearForm();" />
+<input type="submit" name="Save" value="Save" onClick="encryptFormText(Save);" /></td><td>
 <input type="submit" name="Show" value="Show" onClick="javascript:decryptText('57ivCMhw9', 'Enter the decryption key:')" /></td><td>
-<input class="key" type="text" name="key" value="" /><input type="submit" name="encrypt" value=" Encrypt " onclick="encryptFormText();" />
-<!-- input type="button" name="encrypt" value=" Encrypt " onclick="encryptFormText();" /-- ><!-- button does not work yet -->
+<input class="key" type="text" name="key" value="" />
+<input type="button" name="encrypt" value=" Encrypt " onClick="encryptFormText();" />
 </td></tr>
 
 </table>

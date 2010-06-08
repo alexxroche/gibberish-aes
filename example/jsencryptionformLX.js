@@ -12,7 +12,7 @@ function randomPassword(length) {
 };
 
 function encryptFormText(a) {
-   if(a.value.length == 0){
+   if(!a){
 	if (document.form.key.value.length == 0) {
 		alert("Please specify a key with which to encrypt the message.");
 		return;
@@ -23,14 +23,28 @@ function encryptFormText(a) {
 	}
    }
    if (document.form.key.value.length != 0 && document.form.passwd.value.length != 0){
-	alert("you have a key of (" + document.form.key.value + ") and a password of (" + document.form.passwd.value +")");
+	//alert("you have a key of (" + document.form.key.value + ") and a password of (" + document.form.passwd.value +")");
 		encoded = GibberishAES.enc(document.form.passwd.value, document.form.key.value);
 	        document.form.passwd.value = encoded;
+		try{
+		   var forms = document.getElementsByTagName("form")
+		   for(var k=0;k<forms.length;k++){
+			var thisForm = forms[k]
+			var formName = thisForm.name
+			if(formName){try{
+				document.forms[k].Show.disabled=false;
+				if(a){ document.forms[k].Save.disabled=true;} //don't block save if we used the Encrypt button
+				document.forms[k].key.value=''; //give people looking over our shoulder less time
+			}catch(e){}}
+		   }
+		}catch(e){ alert("ERR: "+e);}
+
         	// generate a random ID
         	elementId = randomPassword(8);
         	encoded = encoded.replace(/\n/g, '');
    }else{
-	alert("key = "+ document.form.key.value);
+	//alert("key = "+ document.form.key.value);
+	alert(document.form.passwd.type + " saved");
    }
 };
 
@@ -107,11 +121,17 @@ function gup(name) {
 };
 
 function load() {
-	document.key.text.value = "";
-	document.plain.text.value = decodeURIComponent(gup("text"));
-	document.cipher.text.value = decodeURIComponent(gup("cipher"));
-	document.encryptedCode.text.value = "";
-	document.key.text.focus();
-	document.form.Show.disabled=false;
+	document.form.Show.disabled=true;
+	//if(document.key.text.value){document.key.text.value = "";}
+	//document.plain.text.value = decodeURIComponent(gup("text"));
+	//document.cipher.text.value = decodeURIComponent(gup("cipher"));
+	//document.encryptedCode.text.value = "";
+	//document.key.text.focus();
 }
 
+function clearForm() {
+	document.form.key.value = ''
+	document.form.passwd.value=''
+	document.form.Show.disabled=true;
+	document.form.Save.disabled=false;
+}

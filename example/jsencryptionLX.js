@@ -39,7 +39,11 @@ function decrypt(a,h){
 					for(var k=0;k<forms.length;k++){
                                           var thisForm = forms[k]
 					  var formName = thisForm.name
-					  if(formName){try{document.forms[k].Show.disabled=true;}catch(e){}}
+					  if(formName){try{
+						document.forms[k].Show.disabled=true
+						document.forms[k].Save.disabled=false
+						document.forms[k].key.value=a
+					  }catch(e){}}
 					}
 				  }catch(e){ alert("ERR: "+e);}
 				
