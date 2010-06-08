@@ -1,9 +1,9 @@
 # Gibberish AES
-## A Javascript library for OpenSSL compatible CBC encryption
+## A Javascript library for OpenSSL compatible AES encryption
 
 ----
 
-Copyright: Mark Percival 2008 - <http://mpercival.com>  
+Copyright: Mark Percival 2008 - <http://markpercival.us>  
 License: MIT
 
 Thanks to :
@@ -34,58 +34,54 @@ Thanks to :
 
 #### OpenSSL Interop
 
-        // In Jascascript
+  In Jascascript
+  
         GibberishAES.enc("Made with Gibberish\n", "password");
         // Outputs: "U2FsdGVkX1+21O5RB08bavFTq7Yq/gChmXrO3f00tvJaT55A5pPvqw0zFVnHSW1o"
         
-        # On the command line
+  On the command line
+  
         echo "U2FsdGVkX1+21O5RB08bavFTq7Yq/gChmXrO3f00tvJaT55A5pPvqw0zFVnHSW1o" | openssl enc -d -aes-256-cbc -a -k password
 
-### Design Factors
-I built this library for [G.ibberish.com](http://g.ibberish.com), which heavily influenced it's design.
-It only supports CBC AES encryption mode, and it's built to be compatible with one
-of the most popular AES libraries available, OpenSSL.
 
-Although there's some things I dislike about OpenSSL, it's a commonly used and very capable
-library that's been open source for quite some time, and has received [FIPS certification][1]
+### Requirements
+
+None.
+
+The library is fully encapsulated, you should be able to drop it into nearly any website.
+The downside to this is that it grew with the addition of its
+own Base64 library and MD5 hashing algorithm.
+
+### Tests
+
+[Click here][2] to run the test package in your browser.
+
+The test script does require JQuery(included), but the
+basic GibberishAES does not.
+
+### Design Factors
+
+It only supports CBC AES encryption mode, and it's built to be compatible with one
+of the most popular AES libraries available, OpenSSL. It also passed the [FIPS certification][1]
 from NIST.
 
-One of my primary issues with other AES libraries is the lack of support for OpenSSL.
-One can't expect users to trust a library that's not compatible with a standard
+One of my primary issues with other AES libraries is the lack of support for OpenSSL. I
+don't think one can expect users to trust a library that's not compatible with a standard
 like OpenSSL. It's outside the range of many users to audit encryption code, and while
 compatibility doesn't ensure 100% compliance(especially with asymmetric encryption), one 
 can come pretty close with a symmetric algorithm like AES where the only difference is 
 how OpenSSL picks its random 8 byte salt.
 
-I built the Gibberish library to output its encrypted data in an identical format to OpenSSL, with
-an 8 byte salted PBE. This should allow anyone using the
+I built Gibberish to output its encrypted data in an identical format to OpenSSL, with
+an 8 byte salted PBE, and a Base64 encoding output. This should allow anyone using the
 library to interoperate with OpenSSL with the least amount of work.
 
-I used lookup tables for Galois fields, which gave a 10x speed increase, although at the cost
-of some size.
+The size of this library is under 25k when it's compressed and I feel that's adequate for
+most uses. Although I used lookup tables for Galois fields, the cost of the size
+increase was well offset by the more than 10 fold increase in speed. I think 10k extra
+is a small price to pay for a speed increase like that.
 
-### Testing package
-Open up the test directory and you'll find an HTML file that allows you to verify it's
-working with your browser, computing FIPS test vectors correctly, handling UTF-8 properly,
-and compatible with OpenSSL.
 
-The test script does require JQuery(included), but the
-basic GibberishAES does not. It's only included to make testing easier.
-
-Alternatively you can test it live at 
-[http://projects.markpercival.us/gibberish-aes/gibberish-aes-test.html](http://projects.markpercival.us/gibberish-aes/gibberish-aes-test.html)
-
-### SlowAES
-
-In the process of making this library, I was contacted by Josh Davis, the writer of emcaScrypt,
-in regards to helping out with the project [SlowAES][2].
-
-It's an important project, because while there are a number of
-good AES programs out there, few are compatible with OpenSSL. A lot
-of this is due to the lack of documentation on how OpenSSL handles its
-encryption, and I would recommend that anyone thinking about writing their own AES
-library should check it out. One of my goals is to with SlowAES is to build some better
-documentation on how OpenSSL handles AES encryption.
 
 [1]: http://en.wikipedia.org/wiki/OpenSSL#FIPS_140-2_compliance "FIPS Compliance"
-[2]: http://code.google.com/p/slowaes "SlowAES Project Page"
+[2]: http://projects.markpercival.us/gibberish-aes/gibberish-aes-test.html "Gibberish Tests"
