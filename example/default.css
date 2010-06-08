@@ -1,0 +1,23 @@
+table {
+background-color:#FFFAFA;
+border:thick ridge green;
+border-collapse:separate;
+border-spacing:4px;
+}
+
+table td {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+background:#00B0A8 none repeat scroll 0 0;
+border:medium double blue;
+padding:4px;
+}
+
+.copyright {
+color:#333333;
+font-family:sans-serif;
+font-size:98%;
+font-weight:bolder;
+text-align:left;
+}

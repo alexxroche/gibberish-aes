@@ -1,0 +1,33 @@
+<html>
+<head>
+<script type="text/javascript" src="jsencryptionLX.js"></script>
+<script type="text/javascript" src="jsencryptionformLX.js"></script>
+<link rel="stylesheet" media="all" type="text/css" href="default.css" />
+<title> the password is test</title>
+</head>
+<body onload="load()">
+
+<br />
+
+<br />
+<br />
+<form name="form" action="#" onsubmit="return false;">
+<table>
+<tr><th>Website</th><th>Password</th><th colspan="2">Action&nbsp;</th><th class="key">Encryption key</th></tr>
+<tr><td>
+<input type="text" name="website" value="" /></td><td>
+<input id="57ivCMhw9" type="text" name="passwd" value=""></td><td>
+<input type="button" value=" Clear " onclick="document.form.key.value = ''; document.form.passwd.value='';" />
+<input type="submit" name="Save" value="Save" onclick="encryptFormText(Save);" /></td><td>
+<input type="submit" name="Show" value="Show" onClick="javascript:decryptText('57ivCMhw9', 'Enter the decryption key:')" /></td><td>
+<input class="key" type="text" name="key" value="" /><input type="submit" name="encrypt" value=" Encrypt " onclick="encryptFormText();" />
+<!-- input type="button" name="encrypt" value=" Encrypt " onclick="encryptFormText();" /-- ><!-- button does not work yet -->
+</td></tr>
+
+</table>
+</form>
+<!-- test -->
+
+<br />
+</body>
+</html>

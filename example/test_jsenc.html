@@ -1,9 +1,10 @@
 <html>
 <head>
-<script type="text/javascript" src="jsencryption.js"></script>
+<script type="text/javascript" src="jsencryptionLX.js"></script>
+
 <title> the password is test</title>
 </head>
-<body>
+<body onload="document.fixed.passwd.readOnly='readonly'">
 
 <br />
 
@@ -12,8 +13,10 @@
 <tr><th>Website</th><th>Password</th><th>Action&nbsp;</th></tr>
 <tr><td>
 <input type="text" name="website" value="http://www.alexx.net/"></td><td><span id="6ivCMhw9" title='
-U2FsdGVkX19WuDRSXVdSs79eWIRWAh0RCd/ESSPHys5lZAkrVJCnrtrT5+w9oXHT
-mtnmFKUicnde3X3SqNPxU0CMZv43B1Ygy/v/59MdcD84uGQMPSMQddHCYRceo3b4
+U2FsdGVkX191ivdLE3YmLwDw4/JH0Df
+pp6eoDvcCvL4nijodhh5Wh2Ju7SJS2l
+5bds3ZjLOq2Rr03OG+1C7S09qsNfS13
+fU6OnF9y38KyIA=
 '><input type="text" name="passwd" value="**********"></span></td><td>
 <input type="submit" name="Save" value="Save">
 <a href="javascript:decryptText('6ivCMhw9', 'Enter one of the decryption keys:')">Show password</a>
@@ -35,13 +38,13 @@ mtnmFKUicnde3X3SqNPxU0CMZv43B1Ygy/v/59MdcD84uGQMPSMQddHCYRceo3b4
 </form>
 <!-- test -->
 
-<form>
+<form name="inLineSpan">
 <table>
 <tr><th>Website</th><th>Password</th><th>Action&nbsp;</th></tr>
 <tr><td>
 <input type="text" name="website" value="http://www.alexx.net/"></td><td><span id="16ivCMhw9" title='U2FsdGVkX191ivdLE3YmLwDw4/JH0Dfpp6eoDvcCvL4nijodhh5Wh2Ju7SJS2l5bds3ZjLOq2Rr03OG+1C7S09qsNfS13fU6OnF9y38KyIA='><input type="text" name="passwd" value="**********"></span></td><td>
 <input type="submit" name="Save" value="Save" />
-<input type="button" name="Show Password" value="Show" onClick="javascript:decryptText('16ivCMhw9', 'Enter one of the decryption keys:')">
+<input type="button" name="Show" value="Show" onClick="javascript:decryptText('16ivCMhw9', 'Enter one of the decryption keys:')">
 </td></tr>
 
 </table>
@@ -60,9 +63,24 @@ mtnmFKUicnde3X3SqNPxU0CMZv43B1Ygy/v/59MdcD84uGQMPSMQddHCYRceo3b4
 </form>
 <!-- test -->
 
-Some test to extend the functionality of <br />
+<form name="fixed">
+<table>
+<tr><th>Website</th><th>Password</th><th>Action&nbsp;</th></tr>
+<tr><td>
+<input type="text" name="website" value="http://www.alexx.net/"></td><td><input id="36ivCMhw9" value='U2FsdGVkX19m6/hoNGBwI2Z0aKrV6IXml/L29FH4jhcp+W/2gj+Z5pSvHdjTuLRj' type="text" name="passwd" title="encrypted" class="ROstrike" /></td><td>
+<input type="submit" name="Save" value="Save" />
+<input type="button" name="Show" value="Show" onClick="javascript:decryptText('36ivCMhw9', 'Enter one of the decryption keys:')">
+<tr><td>
+</td></tr>
+
+</table>
+</form>
+<!-- test -->
+
+
+Some tests to extend the functionality of <br />
 http://www.vincentcheung.ca/jsencryption/<br  />
-which is based on http://github.com/markpercival/gibberish-aes so this uses 256 bit CBC ( ECB for us, phew!)<br />
+which is based on http://github.com/markpercival/gibberish-aes so this uses 256 bit CBC ( no ECB for us, phew!)<br />
 Output compatible with openSSL<br />
 echo "U2FsdGVkX1+21O5RB08bavFTq7Yq/gChmXrO3f00tvJaT55A5pPvqw0zFVnHSW1o" | openssl enc -d -aes-256-cbc -a -k password<br />
 <br />
