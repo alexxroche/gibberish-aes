@@ -1,4 +1,250 @@
-var decryptElementId;function decryptText(c,a,b){decryptElementId=c;if(a==null)a="Enter the decryption key:";b!=null&&b?decrypt(b):vcPrompt(a,decrypt)}; function decrypt(b){if(b!=""&&b!=null){if(decryptElementId.constructor!=Array)decryptElementId=[decryptElementId];for(var f=false,d=0;d<decryptElementId.length;d++){var a=document.getElementById(decryptElementId[d]),c=a.title,g=false;if(!c||c.match(/^enc/i)){c=a.value;g=true}try{var e=GibberishAES.dec(c,b);f=true;if(g)a.value=e;a.innerHTML=e;a.title=a.title.match(/^enc/i)?"plain":"";a.readOnly=false;try{var h=document.getElementsByTagName("form");for(a=0;a<h.length;a++)if(h[a].name)try{document.forms[a].Show.disabled= true;document.forms[a].Save.disabled=false;document.forms[a].key.value=b}catch(j){}}catch(i){alert("ERR: "+i)}}catch(k){alert("plain=("+e+") for cypher "+c+" and key:"+b)}}f||alert("Invalid decryption key","test")}}var overlayElt=null,winElt=null,passElt=null,promptElt=null; function vcPrompt(a){if(overlayElt==null||winElt==null||passElt==null||promptElt==null)vcCreateDialog(a);promptElt.innerHTML=a!=null?a:"Enter password:";pageSize=getPageSize();winElt.style.marginTop=Math.round(pageSize[3]*0.3)+"px";winElt.style.marginLeft=Math.round((pageSize[2]-400)/2)+"px";if(isIE6=/msie|MSIE 6/.test(navigator.userAgent)){pageScroll=getPageScroll();overlayElt.style.position="absolute";overlayElt.style.width=pageSize[0]+"px";overlayElt.style.height=pageSize[1]+"px";winElt.style.position= "absolute";winElt.style.top=pageScroll[1]+"px";winElt.style.left=pageScroll[0]+"px"}passElt.value="";overlayElt.style.display="block";winElt.style.display="block";passElt.focus();passElt.select()}; function vcCreateDialog(){overlayElt=document.createElement("div");overlayElt.setAttribute("id","vcOverlay");var a=overlayElt.style;a.backgroundColor="black";a.MozOpacity=0.1;a.opacity=0.1;a.filter="alpha(opacity=10)";a.position="fixed";a.top=0;a.left=0;a.width="100%";a.height="100%";a.zIndex=254;a.textAlign="left";a.margin=0;a.padding=0;var b=document.getElementsByTagName("body").item(0);b.insertBefore(overlayElt,b.firstChild);winElt=document.createElement("div");winElt.setAttribute("id","vcWin"); a=winElt.style;a.position="fixed";a.top=0;a.left=0;a.width="400px";a.zIndex=255;a.border="1px solid black";a.backgroundColor="#fbfcfd";a.textAlign="left";a.margin=0;a.padding=0;b.insertBefore(winElt,b.firstChild);b=document.createElement("div");b.setAttribute("id","vcInWin");a=b.style;a.border="5px solid #808080";a.padding="15px";a.margin=0;winElt.appendChild(b);promptElt=document.createElement("p");promptElt.setAttribute("id","vcPrompt");a=promptElt.style;a.padding=0;a.margin=0;a.fontFamily="Arial, sans-serif"; a.fontSize="14px";a.textAlign="left";a.color="black";b.appendChild(promptElt);passElt=document.createElement("input");passElt.setAttribute("id","vcPass");passElt.type="text";passElt.onkeydown=function(c){if(c==null)c=window.event;if(c.keyCode==10||c.keyCode==13)vcClick(1);c.keyCode==27&&vcClick(0)};a=passElt.style;a.position="relative";a.width="345px";a.padding="5px";a.margin="5px 0 10px 0";a.fontFamily="monospace";a.fontSize="14px";a.textAlign="left";a.color="black";a.border="2px solid #808080"; a.backgroundColor="white";b.appendChild(passElt);a=document.createElement("div");a.style.textAlign="right";a.style.fontFamily="Arial, sans-serif";a.style.fontSize="14px";b.appendChild(a);b=document.createElement("input");b.type="button";b.value="OK";b.onclick=function(){vcClick(1)};b.style.margin="0 0 0 0.5em";b.style.padding="5px";b.style.color="black";a.appendChild(b);b=document.createElement("input");b.type="button";b.value="Cancel";b.onclick=function(){vcClick(0)};b.style.margin="0 0 0 0.5em"; b.style.padding="5px";b.style.color="black";a.appendChild(b)}function vcClick(a){overlayElt.style.display="none";winElt.style.display="none";a&&decrypt(passElt.value)} function getPageScroll(){var a;if(self.pageYOffset)a=self.pageYOffset;else if(document.documentElement&&document.documentElement.scrollTop)a=document.documentElement.scrollTop;else if(document.body)a=document.body.scrollTop;var b;if(self.pageXOffset)b=self.pageXOffset;else if(document.documentElement&&document.documentElement.scrollLeft)b=document.documentElement.scrollLeft;else if(document.body)b=document.body.scrollLeft;return arrayPageScroll=new Array(b,a)}; function getPageSize(){var c,d;if(window.innerHeight&&window.scrollMaxY){c=document.body.scrollWidth;d=window.innerHeight+window.scrollMaxY}else if(document.body.scrollHeight>document.body.offsetHeight){c=document.body.scrollWidth;d=document.body.scrollHeight}else{c=document.body.offsetWidth;d=document.body.offsetHeight}var a,b;if(self.innerHeight){a=self.innerWidth;b=self.innerHeight}else if(document.documentElement&&document.documentElement.clientHeight){a=document.documentElement.clientWidth;b= document.documentElement.clientHeight}else if(document.body){a=document.body.clientWidth;b=document.body.clientHeight}pageHeight=d<b?b:d;pageWidth=c<a?a:c;return arrayPageSize=new Array(pageWidth,pageHeight,a,b)};
+/*
+	JavaScript Encryption and Decryption 2.0
+	http://www.vincentcheung.ca/jsencryption/
+	
+	The backend is Gibberish AES by Mark Percival (http://github.com/markpercival/gibberish-aes/tree/master)
+	
+	Copyright 2008 Vincent Cheung
+	Dec. 16, 2008
+*/
+var decryptElementId;
+
+function decryptText(a,b,c){
+	decryptElementId=a;
+	if(b==null){b="Enter the decryption key:"}
+	//if(c!=null&&c){var d=prompt(b,""); decrypt(d,c)
+	if(c!=null&&c){decrypt(c)}else{vcPrompt(b,decrypt)}
+}
+
+function decrypt(a,h){
+	if(a!=""&&a!=null){
+		if(decryptElementId.constructor!=Array){ decryptElementId=[decryptElementId]}
+		var b=false;
+		for(var i=0;i<decryptElementId.length;i++){
+		    var c=document.getElementById(decryptElementId[i]);
+	   	    var d=c.title;
+		    var g=false;
+		    if(!d || d.match(/^enc/i)){ d=c.value; g=true;} //we set the title to enc
+			try{
+				var e=GibberishAES.dec(d,a);
+				b=true;
+				if(g){c.value=e;}
+				c.innerHTML=e;
+				if(c.title.match(/^enc/i)){c.title="plain"}
+				else{c.title=""}
+				c.readOnly= false;
+				//c.removeAttribute('readOnly'); //this also works
+				try{
+					var forms = document.getElementsByTagName("form")
+					for(var k=0;k<forms.length;k++){
+                                          var thisForm = forms[k]
+					  var formName = thisForm.name
+					  if(formName){try{
+						document.forms[k].Show.disabled=true
+						document.forms[k].Save.disabled=false
+						document.forms[k].key.value=a
+					  }catch(e){}}
+					}
+				  }catch(e){ alert("ERR: "+e);}
+				
+				//try{document.fixed.Show.disabled=true;}catch(e){}
+				//c.removeAttribute('readOnly','readonly'); //this also works
+			}catch(err){ alert("plain=("+e+") for cypher "+d+" and key:"+a); }
+		}
+		if(!b){alert("Invalid decryption key","test")}
+	}
+}
+
+var overlayElt=null;
+var winElt=null;
+var passElt=null;
+var promptElt=null;
+
+function vcPrompt(a){
+	if(overlayElt==null||winElt==null||passElt==null||promptElt==null){
+		vcCreateDialog(a)
+	}
+	promptElt.innerHTML=a!=null?a:"Enter password:";
+	pageSize=getPageSize();
+	winElt.style.marginTop=Math.round(pageSize[3]*0.3)+"px";
+	winElt.style.marginLeft=Math.round((pageSize[2]-400)/2)+"px";
+	isIE6=/msie|MSIE 6/.test(navigator.userAgent);
+	if(isIE6){
+		pageScroll=getPageScroll();
+		overlayElt.style.position="absolute";
+		overlayElt.style.width=pageSize[0]+"px";
+		overlayElt.style.height=pageSize[1]+"px";
+		winElt.style.position="absolute";
+		winElt.style.top=pageScroll[1]+"px";
+		winElt.style.left=pageScroll[0]+"px"
+	}
+	passElt.value="";
+	overlayElt.style.display="block";
+	winElt.style.display="block";
+	passElt.focus();
+	passElt.select()
+}
+
+function vcCreateDialog(){
+	overlayElt=document.createElement("div");
+	overlayElt.setAttribute("id","vcOverlay");
+	var s=overlayElt.style;
+	s.backgroundColor="black";
+	s.MozOpacity=0.1;
+	s.opacity=0.1;
+	s.filter="alpha(opacity=10)";
+	s.position="fixed";
+	s.top=0;
+	s.left=0;
+	s.width="100%";
+	s.height="100%";
+	s.zIndex=254;
+	s.textAlign="left";
+	s.margin=0;
+	s.padding=0;
+	var a=document.getElementsByTagName("body").item(0);
+	a.insertBefore(overlayElt,a.firstChild);
+	winElt=document.createElement("div");
+	winElt.setAttribute("id","vcWin");
+	s=winElt.style;
+	s.position="fixed";
+	s.top=0;
+	s.left=0;
+	s.width="400px";
+	s.zIndex=255;
+	s.border="1px solid black";
+	s.backgroundColor="#fbfcfd";
+	s.textAlign="left";
+	s.margin=0;
+	s.padding=0;
+	a.insertBefore(winElt,a.firstChild);
+	var b=document.createElement("div");
+	b.setAttribute("id","vcInWin");
+	s=b.style;
+	s.border="5px solid #808080";
+	s.padding="15px";
+	s.margin=0;
+	winElt.appendChild(b);
+	promptElt=document.createElement("p");
+	promptElt.setAttribute("id","vcPrompt");
+	s=promptElt.style;
+	s.padding=0;
+	s.margin=0;
+	s.fontFamily="Arial, sans-serif";
+	s.fontSize="14px";
+	s.textAlign="left";
+	s.color="black";
+	b.appendChild(promptElt);
+	passElt=document.createElement("input");
+	passElt.setAttribute("id","vcPass");
+	passElt.type="text";
+	
+	passElt.onkeydown=function(c){
+		if(c==null){c=window.event}
+		if((c.keyCode==10)||(c.keyCode==13)){vcClick(1)}
+		if(c.keyCode==27){vcClick(0)}
+	};
+	s=passElt.style;
+	s.position="relative";
+	s.width="345px";
+	s.padding="5px";
+	s.margin="5px 0 10px 0";
+	s.fontFamily="monospace";
+	s.fontSize="14px";
+	s.textAlign="left";
+	s.color="black";
+	s.border="2px solid #808080";
+	s.backgroundColor="white";
+	b.appendChild(passElt);
+	var c=document.createElement("div");
+	c.style.textAlign="right";
+	c.style.fontFamily="Arial, sans-serif";
+	c.style.fontSize="14px";
+	b.appendChild(c);
+	var d=document.createElement("input");
+	d.type="button";
+	d.value="OK";
+	d.onclick=function(){vcClick(1)};
+	d.style.margin="0 0 0 0.5em";
+	d.style.padding="5px";
+	d.style.color="black";
+	c.appendChild(d);
+	d=document.createElement("input");
+	d.type="button";
+	d.value="Cancel";
+	d.onclick=function(){vcClick(0)};
+	d.style.margin="0 0 0 0.5em";
+	d.style.padding="5px";
+	d.style.color="black";
+	c.appendChild(d)
+}
+
+function vcClick(a){
+	overlayElt.style.display="none";
+	winElt.style.display="none";
+	if(a){decrypt(passElt.value)}
+}
+
+function getPageScroll(){
+	var a;
+	if(self.pageYOffset){a=self.pageYOffset}
+	else{
+		if(document.documentElement&&document.documentElement.scrollTop){
+			a=document.documentElement.scrollTop
+		}else{
+			if(document.body){a=document.body.scrollTop}
+		}
+	}
+	var b;
+	if(self.pageXOffset){
+		b=self.pageXOffset
+	}else{
+		if(document.documentElement&&document.documentElement.scrollLeft){
+			b=document.documentElement.scrollLeft
+		}else{
+			if(document.body){
+				b=document.body.scrollLeft
+			}
+		}
+	}
+	arrayPageScroll=new Array(b,a);
+	return arrayPageScroll
+}
+
+function getPageSize(){
+	var a,b;
+	if(window.innerHeight&&window.scrollMaxY){
+		a=document.body.scrollWidth;
+		b=window.innerHeight+window.scrollMaxY
+	}else{
+		if(document.body.scrollHeight>document.body.offsetHeight){
+			a=document.body.scrollWidth;
+			b=document.body.scrollHeight
+		}else{
+			a=document.body.offsetWidth;
+			b=document.body.offsetHeight
+		}
+	}
+	var c,d;
+	if(self.innerHeight){
+		c=self.innerWidth;
+		d=self.innerHeight
+	}else{
+		if(document.documentElement&&document.documentElement.clientHeight){
+			c=document.documentElement.clientWidth;
+			d=document.documentElement.clientHeight
+		}else{
+			if(document.body){
+				c=document.body.clientWidth;
+				d=document.body.clientHeight
+			}
+		}
+	}
+	if(b<d){pageHeight=d}else{pageHeight=b}
+	if(a<c){pageWidth=c}else{pageWidth=a}
+	arrayPageSize=new Array(pageWidth,pageHeight,c,d);
+	return arrayPageSize
+}
 
 var GibberishAES={
 	Nr:14,Nb:4,Nk:8,Decrypt:false,
@@ -266,6 +512,8 @@ var GibberishAES={
 	}
 };
 
+
+
 GibberishAES.Hash={
 
 	MD5:function(a){
@@ -429,5 +677,49 @@ for(k=0;k<x.length;k+=16){
 	}
 };
 
-GibberishAES.Base64={chars:["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9","+","/"],encode:function(d){var c=[],b="";totalChunks=Math.floor(d.length*16/3);for(var a=0;a<d.length*16;a++)c.push(d[Math.floor(a/16)][a%16]);for(a=0;a<c.length;a+=3){b+=this.chars[c[a]>>2];b+=this.chars[(c[a]&3)<<4|c[a+1]>> 4];b+=c[a+1]!=null?this.chars[(c[a+1]&15)<<2|c[a+2]>>6]:"=";b+=c[a+2]!=null?this.chars[c[a+2]&63]:"="}d=b.slice(0,64)+"\n";for(a=1;a<Math.ceil(b.length/64);a++)d+=b.slice(a*64,a*64+64)+(Math.ceil(b.length/64)==a+1?"":"\n");return d},decode:function(d){d=d.replace(/\s/g,"");for(var c=[],b=[],a=[],e=0;e<d.length;e+=4){b[0]=this.chars.indexOf(d.charAt(e));b[1]=this.chars.indexOf(d.charAt(e+1));b[2]=this.chars.indexOf(d.charAt(e+2));b[3]=this.chars.indexOf(d.charAt(e+3));a[0]=b[0]<<2|b[1]>>4;a[1]=(b[1]& 15)<<4|b[2]>>2;a[2]=(b[2]&3)<<6|b[3];c.push(a[0],a[1],a[2])}return c=c.slice(0,c.length-c.length%16)}};
-if(!Array.indexOf){ Array.prototype.indexOf=function(a,b){ for(var i=(b||0);i<this.length;i++){if(this[i]==a){return i}} } };
+GibberishAES.Base64={
+
+	chars:["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9","+","/"],
+	encode:function(b,a){
+		var c=[];
+		var d="";
+		totalChunks=Math.floor(b.length*16/3);
+		for(var i=0;i<b.length*16;i++){c.push(b[Math.floor(i/16)][i%16])}
+		for(var i=0;i<c.length;i=i+3){
+			d+=this.chars[c[i]>>2];
+			d+=this.chars[((c[i]&3)<<4)|(c[i+1]>>4)];
+			if(!(c[i+1]==null)){d+=this.chars[((c[i+1]&15)<<2)|(c[i+2]>>6)]}else{d+="="}
+			if(!(c[i+2]==null)){d+=this.chars[c[i+2]&63]}else{d+="="}
+		}
+		var e=d.slice(0,64)+"\n";
+		for(var i=1;i<(Math.ceil(d.length/64));i++){
+			e+=d.slice(i*64,i*64+64)+(Math.ceil(d.length/64)==i+1?"":"\n")
+		}
+		return e
+	},
+
+	decode:function(a){
+		a=a.replace(/\s/g,"");
+		var b=[];
+		var c=[];
+		var d=[];
+		for(var i=0;i<a.length;i=i+4){
+			c[0]=this.chars.indexOf(a.charAt(i));
+			c[1]=this.chars.indexOf(a.charAt(i+1));
+			c[2]=this.chars.indexOf(a.charAt(i+2));
+			c[3]=this.chars.indexOf(a.charAt(i+3));
+			d[0]=(c[0]<<2)|(c[1]>>4);
+			d[1]=((c[1]&15)<<4)|(c[2]>>2);
+			d[2]=((c[2]&3)<<6)|c[3];
+			b.push(d[0],d[1],d[2])
+		}
+		b=b.slice(0,b.length-(b.length%16));
+		return b
+	}
+};
+
+if(!Array.indexOf){
+	Array.prototype.indexOf=function(a,b){
+		for(var i=(b||0);i<this.length;i++){if(this[i]==a){return i}}
+	}
+};
