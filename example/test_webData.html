@@ -1,7 +1,8 @@
 <html>
 <head>
-<script type="text/javascript" src="jsencryptionLX.js"></script>
-<script type="text/javascript" src="jsencryptionformLX.js"></script>
+<!-- script type="text/javascript" src="jsencryptionLX.js"></script>
+<script type="text/javascript" src="jsencryptionformLX.js"></script -->
+<script type="text/javascript" src="javascriptAES.js"></script>
 <link rel="stylesheet" media="all" type="text/css" href="default.css" />
 <title> the password is test</title>
 </head>
@@ -18,7 +19,7 @@
 <input type="text" name="website" value="" /></td><td>
 <input id="57ivCMhw9" type="text" name="passwd" value=""></td><td>
 <input type="button" value=" Clear " onClick="clearForm();" />
-<input type="submit" name="Save" value="Save" onClick="encryptFormText(Save);" /></td><td>
+<input type="submit" name="Save" value="Save" onClick="encryptFormText(Save); this.form.onsubmit=false;"/></td><td>
 <input type="submit" name="Show" value="Show" onClick="javascript:decryptText('57ivCMhw9', 'Enter the decryption key:', this.form.key.value)" /></td><td>
 <input class="key" type="text" name="key" value="" />
 <input type="button" name="encrypt" value=" Encrypt " onClick="encryptFormText();" />
