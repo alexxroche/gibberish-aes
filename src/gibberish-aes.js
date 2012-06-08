@@ -1,15 +1,19 @@
-/*! Gibberish-AES 
+/**
+* @license Gibberish-AES 
 * A lightweight Javascript Libray for OpenSSL compatible AES CBC encryption.
 *
 * Author: Mark Percival
 * Email: mark@mpercival.com
 * Copyright: Mark Percival - http://mpercival.com 2008
-* Josh Davis - http://www.josh-davis.org/ecmaScrypt 2007
-* Chris Veness - http://www.movable-type.co.uk/scripts/aes.html 2007
+*
+* With thanks to:
+* Josh Davis - http://www.josh-davis.org/ecmaScrypt
+* Chris Veness - http://www.movable-type.co.uk/scripts/aes.html
 * Michel I. Gallant - http://www.jensign.com/
 *
 * License: MIT
-* Usage: Gibberish.encrypt("secret", "password", 256)
+*
+* Usage: GibberishAES.enc("secret", "password")
 * Outputs: AES Encrypted text encoded in Base64
 */
 
@@ -95,13 +99,18 @@ var GibberishAES = (function(){
         return ret;
     },
 
-    s2a = function(string) {
-        string = enc_utf8(string);
+    s2a = function(string, binary) {
         var array = [], i;
+
+        if (! binary) {
+            string = enc_utf8(string);
+        }
+
         for (i = 0; i < string.length; i++)
         {
             array[i] = string.charCodeAt(i);
         }
+
         return array;
     },
 
@@ -184,7 +193,7 @@ var GibberishAES = (function(){
         return cipherBlocks;
     },
 
-    rawDecrypt = function(cryptArr, key, iv) {
+    rawDecrypt = function(cryptArr, key, iv, binary) {
         //  cryptArr, key and iv as byte arrays
         key = expandKey(key);
         var numBlocks = cryptArr.length / 16,
@@ -203,7 +212,7 @@ var GibberishAES = (function(){
             string += block2s(plainBlocks[i]);
         }
         string += block2s(plainBlocks[i], true);
-        return dec_utf8(string);
+        return binary ? string : dec_utf8(string); 
     },
 
     encryptBlock = function(block, words) {
@@ -554,31 +563,31 @@ var GibberishAES = (function(){
     0x9f, 0x91, 0x83, 0x8d
     ],
 
-    enc = function(string, pass) {
+    enc = function(string, pass, binary) {
         // string, password in plaintext
         var salt = randArr(8),
-        pbe = openSSLKey(s2a(pass), salt),
+        pbe = openSSLKey(s2a(pass, binary), salt),
         key = pbe.key,
         iv = pbe.iv,
         cipherBlocks,
         saltBlock = [[83, 97, 108, 116, 101, 100, 95, 95].concat(salt)];
-        string = s2a(string);
+        string = s2a(string, binary);
         cipherBlocks = rawEncrypt(string, key, iv);
         // Spells out 'Salted__'
         cipherBlocks = saltBlock.concat(cipherBlocks);
         return Base64.encode(cipherBlocks);
     },
 
-    dec = function(string, pass) {
+    dec = function(string, pass, binary) {
         // string, password in plaintext
         var cryptArr = Base64.decode(string),
         salt = cryptArr.slice(8, 16),
-        pbe = openSSLKey(s2a(pass), salt),
+        pbe = openSSLKey(s2a(pass, binary), salt),
         key = pbe.key,
         iv = pbe.iv;
         cryptArr = cryptArr.slice(16, cryptArr.length);
         // Take off the Salted__ffeeddcc
-        string = rawDecrypt(cryptArr, key, iv);
+        string = rawDecrypt(cryptArr, key, iv, binary);
         return string;
     },
     
@@ -922,3 +931,7 @@ var GibberishAES = (function(){
     };
 
 })();
+
+if ( typeof define === "function" ) {
+    define(function () { return GibberishAES; });
+}
